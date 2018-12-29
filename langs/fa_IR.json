@@ -1,0 +1,11 @@
+{
+	"author": {
+		"name" : "Amir.h Yeganemehr",
+		"website" : "http://yeganemehr.ir/"
+	},
+	"rtl": true,
+	"phrases":{
+		"financial.gateway.nextpay": "نکست پی",
+		"settings.financial.gateways.nextpay.api_key": "کلید API"
+	}
+}

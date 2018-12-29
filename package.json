@@ -1,0 +1,14 @@
+{
+	"permissions": "*",
+	"autoload":"autoloader.json",
+	"dependencies": ["financial"],
+	"languages":{
+		"fa_IR" : "langs/fa_IR.json"
+	},
+	"events": [
+		{
+			"name":"\\packages\\financial\\events\\gateways",
+			"listener": "listeners\\settings\\financial@gateways_list"
+		}
+	]
+}

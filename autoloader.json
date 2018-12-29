@@ -1,0 +1,12 @@
+{
+	"files":[
+		{
+			"classes":["gateway"],
+			"file":"gateway.php"
+		},
+		{
+			"classes":["listeners\\settings\\financial"],
+			"file":"listeners/settings/financial.php"
+		}
+	]
+}
