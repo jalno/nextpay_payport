@@ -4,6 +4,7 @@ namespace packages\nextpay_payport;
 
 use packages\base\Http;
 use packages\base\Json;
+use packages\base\Exception;
 use packages\financial\Payport;
 use packages\financial\Payport\AlreadyVerified;
 use packages\financial\Payport\Gateway as ParentGateway;
@@ -46,10 +47,12 @@ class Gateway extends ParentGateway
      */
     public function paymentRequest(Payport_Pay $pay)
     {
+        
         $params = [
             'api_key' => $this->apiKey,
             'order_id' => $pay->id,
             'amount' => $pay->price,
+            'currency' => $this->getPaymentCurrency($pay),
             'callback_uri' => $this->callbackURL($pay),
         ];
         $result = $this->sendRequest('token', $params);
@@ -88,6 +91,7 @@ class Gateway extends ParentGateway
             'api_key' => $this->apiKey,
             'trans_id' => $transID,
             'amount' => $pay->price,
+            'currency' => $this->getPaymentCurrency($pay),
         ];
         $result = $this->sendRequest('verify', $params);
         if (-49 == $result['code']) {
@@ -104,6 +108,16 @@ class Gateway extends ParentGateway
         }
 
         return Payport_pay::success;
+    }
+
+    protected function getPaymentCurrency(Payport_Pay $pay): string {
+        if (in_array($pay->currency->title, ["IRR", "Rial", "ریال"])) {
+            return "IRR";
+        }
+        if (in_array($pay->currency->title, ["IRT", "Toman", "تومان"])) {
+            $currency = "IRT";
+        }
+        throw new Exception("Unknown payment currency");
     }
 
     /**
