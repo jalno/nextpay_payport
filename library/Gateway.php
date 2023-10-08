@@ -115,7 +115,7 @@ class Gateway extends ParentGateway
             return "IRR";
         }
         if (in_array($pay->currency->title, ["IRT", "Toman", "تومان"])) {
-            $currency = "IRT";
+            return "IRT";
         }
         throw new Exception("Unknown payment currency");
     }
