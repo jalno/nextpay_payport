@@ -2,18 +2,18 @@
 
 namespace packages\nextpay_payport;
 
-use packages\base\Http;
+use packages\base\HTTP;
 use packages\base\Json;
 use packages\base\Exception;
-use packages\financial\Payport;
-use packages\financial\Payport\AlreadyVerified;
-use packages\financial\Payport\Gateway as ParentGateway;
-use packages\financial\Payport\GatewayException;
-use packages\financial\Payport\Redirect;
-use packages\financial\Payport\VerificationException;
-use packages\financial\Payport_Pay;
+use packages\financial\PayPort;
+use packages\financial\PayPort\AlreadyVerified;
+use packages\financial\PayPort\GateWay as ParentGateWay;
+use packages\financial\PayPort\GateWayException;
+use packages\financial\PayPort\Redirect;
+use packages\financial\PayPort\VerificationException;
+use packages\financial\PayPortPay;
 
-class Gateway extends ParentGateway
+class GateWay extends ParentGateWay
 {
     /**
      * @see https://nextpay.org/nx/docs
@@ -32,20 +32,20 @@ class Gateway extends ParentGateway
     {
         $this->apiKey = $payport->param('nextpay_api_key');
         if (!$this->apiKey) {
-            throw new GatewayException('There is not api key');
+            throw new GateWayException('There is not api key');
         }
     }
 
     /**
-     * Issue a new payment request for given payport_pay object and redirect the client to gateway.
+     * Issue a new payment request for given PayPortPay object and redirect the client to gateway.
      *
-     * @param payport_pay $pay a generated pay which passed by financial package
+     * @param PayPortPay $pay a generated pay which passed by financial package
      *
      * @throws RequestException when http request failed or responsed "code" not equals to -1
      *
      * @return Redirect for passing client to gateway
      */
-    public function paymentRequest(Payport_Pay $pay)
+    public function paymentRequest(PayPortPay $pay)
     {
         
         $params = [
@@ -74,16 +74,16 @@ class Gateway extends ParentGateway
     /**
      * Verify the payment after return client to system.
      *
-     * @param Payport_Pay $pay holding "nextpay_trans_id" payment
+     * @param PayPortPay $pay holding "nextpay_trans_id" payment
      *
      * @throws VerificationException for unsuccessfull payments
      * @throws AlreadyVerified       for duplicate verifications
      *
-     * @return int new state for payment which can be payport_pay::success or payport_pay::failed
+     * @return int new state for payment which can be PayPortPay::success or PayPortPay::failed
      */
-    public function PaymentVerification(Payport_Pay $pay)
+    public function PaymentVerification(PayPortPay $pay)
     {
-        $transID = Http::getURIData('trans_id');
+        $transID = HTTP::getURIData('trans_id');
         if ($transID != $pay->param('nextpay_trans_id')) {
             throw new VerificationException();
         }
@@ -107,10 +107,10 @@ class Gateway extends ParentGateway
             }
         }
 
-        return Payport_pay::success;
+        return PayPortPay::success;
     }
 
-    protected function getPaymentCurrency(Payport_Pay $pay): string {
+    protected function getPaymentCurrency(PayPortPay $pay): string {
         if (in_array($pay->currency->title, ["IRR", "Rial", "ریال"])) {
             return "IRR";
         }
@@ -133,13 +133,13 @@ class Gateway extends ParentGateway
     private function sendRequest(string $path, array $params)
     {
         try {
-            $http = new Http\Client();
+            $http = new HTTP\Client();
             $response = $http->post(self::GATEWAY.'/'.$path, [
                 'cookies' => false,
                 'form_params' => $params,
                 'ssl_verify' => false,
             ]);
-            $result = json\decode($response->getBody());
+            $result = Json\Decode($response->getBody());
             if (!isset($result['code'])) {
                 $exception = new RequestException();
                 $exception->setParams($params);
@@ -148,7 +148,7 @@ class Gateway extends ParentGateway
             }
 
             return $result;
-        } catch (Http\ResponseException $e) {
+        } catch (HTTP\ResponseException $e) {
             $exception = new RequestException();
             $exception->setParams($params);
             $exception->setResult($e->getResponse());

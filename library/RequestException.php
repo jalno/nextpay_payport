@@ -2,9 +2,9 @@
 
 namespace packages\nextpay_payport;
 
-use packages\financial\Payport\GatewayException;
+use packages\financial\PayPort\GateWayException;
 
-class RequestException extends GatewayException
+class RequestException extends GateWayException
 {
     protected $params;
     protected $result;

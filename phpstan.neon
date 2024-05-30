@@ -3,9 +3,6 @@ parameters:
    - .
   level: 1
   scanDirectories:
-    - ../base
-    - ../userpanel
-    - ../notifications
-    - ../financial
-  ignoreErrors:
-    - "/(Class|Interface|Trait) .+ referenced with incorrect case/"
+    - ../..
+
+

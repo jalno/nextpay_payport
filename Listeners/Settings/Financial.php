@@ -1,16 +1,16 @@
 <?php
 
-namespace packages\nextpay_payport\listeners\settings;
+namespace packages\nextpay_payport\Listeners\Settings;
 
-use packages\financial\events\Gateways;
-use packages\nextpay_payport\Gateway;
+use packages\financial\Events\GateWays;
+use packages\nextpay_payport\GateWay;
 
-class financial
+class Financial
 {
-    public function gateways_list(Gateways $gateways)
+    public function gateways_list(GateWays $gateways)
     {
-        $gateway = new Gateways\Gateway('nextpay');
-        $gateway->setHandler(Gateway::class);
+        $gateway = new GateWays\GateWay('nextpay');
+        $gateway->setHandler(GateWay::class);
         $gateway->addInput([
             'name' => 'nextpay_api_key',
             'type' => 'string',
