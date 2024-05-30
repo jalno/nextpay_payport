@@ -2,9 +2,9 @@
 
 namespace packages\nextpay_payport;
 
+use packages\base\Exception;
 use packages\base\HTTP;
 use packages\base\Json;
-use packages\base\Exception;
 use packages\financial\PayPort;
 use packages\financial\PayPort\AlreadyVerified;
 use packages\financial\PayPort\GateWay as ParentGateWay;
@@ -18,7 +18,7 @@ class GateWay extends ParentGateWay
     /**
      * @see https://nextpay.org/nx/docs
      */
-    const GATEWAY = 'https://nextpay.org/nx/gateway';
+    public const GATEWAY = 'https://nextpay.org/nx/gateway';
 
     /**
      * @var string holds nextpay api key
@@ -26,9 +26,9 @@ class GateWay extends ParentGateWay
     private $apiKey;
 
     /**
-     * @param payport $payport which hold "nextpay_api_key" in Its params
+     * @param PayPort $payport which hold "nextpay_api_key" in Its params
      */
-    public function __construct(Payport $payport)
+    public function __construct(PayPort $payport)
     {
         $this->apiKey = $payport->param('nextpay_api_key');
         if (!$this->apiKey) {
@@ -41,13 +41,12 @@ class GateWay extends ParentGateWay
      *
      * @param PayPortPay $pay a generated pay which passed by financial package
      *
-     * @throws RequestException when http request failed or responsed "code" not equals to -1
-     *
      * @return Redirect for passing client to gateway
+     *
+     * @throws RequestException when http request failed or responsed "code" not equals to -1
      */
     public function paymentRequest(PayPortPay $pay)
     {
-        
         $params = [
             'api_key' => $this->apiKey,
             'order_id' => $pay->id,
@@ -76,10 +75,10 @@ class GateWay extends ParentGateWay
      *
      * @param PayPortPay $pay holding "nextpay_trans_id" payment
      *
+     * @return int new state for payment which can be PayPortPay::success or PayPortPay::failed
+     *
      * @throws VerificationException for unsuccessfull payments
      * @throws AlreadyVerified       for duplicate verifications
-     *
-     * @return int new state for payment which can be PayPortPay::success or PayPortPay::failed
      */
     public function PaymentVerification(PayPortPay $pay)
     {
@@ -110,14 +109,15 @@ class GateWay extends ParentGateWay
         return PayPortPay::success;
     }
 
-    protected function getPaymentCurrency(PayPortPay $pay): string {
-        if (in_array($pay->currency->title, ["IRR", "Rial", "ریال"])) {
-            return "IRR";
+    protected function getPaymentCurrency(PayPortPay $pay): string
+    {
+        if (in_array($pay->currency->title, ['IRR', 'Rial', 'ریال'])) {
+            return 'IRR';
         }
-        if (in_array($pay->currency->title, ["IRT", "Toman", "تومان"])) {
-            return "IRT";
+        if (in_array($pay->currency->title, ['IRT', 'Toman', 'تومان'])) {
+            return 'IRT';
         }
-        throw new Exception("Unknown payment currency");
+        throw new Exception('Unknown payment currency');
     }
 
     /**
@@ -126,9 +126,9 @@ class GateWay extends ParentGateWay
      * @param string $path   will append to nextpay gateway URL
      * @param array  $params http body
      *
-     * @throws RequestException when http request or json decoding failed
-     *
      * @return array json decoded response
+     *
+     * @throws RequestException when http request or json decoding failed
      */
     private function sendRequest(string $path, array $params)
     {
