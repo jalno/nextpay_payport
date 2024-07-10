@@ -1,0 +1,15 @@
+{
+    "name": "jalno/nextpay-payport",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "jalno/financial": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "packages\\nextpay_payport\\": ["library/"]
+        }
+    }
+}
