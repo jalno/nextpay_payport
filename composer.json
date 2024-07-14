@@ -11,5 +11,10 @@
         "psr-4": {
             "packages\\nextpay_payport\\": ["library/"]
         }
+    },
+    "extra": {
+        "jalno": {
+            "manifest": "package.json"
+        }
     }
 }

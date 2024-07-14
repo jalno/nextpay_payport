@@ -2,14 +2,13 @@
 	"autoload":{
 		"directories": ["library", "listeners"]
 	},
-	"dependencies": ["financial"],
 	"languages":{
 		"fa_IR" : "langs/fa_IR.json"
 	},
 	"events": [
 		{
-			"name":"packages/financial/events/gateways",
-			"listener": "listeners/settings/financial@gateways_list"
+			"name":"packages/financial/Events/GateWays",
+			"listener": "packages/nextpay_payport/Listeners/Settings/Financial@gateways_list"
 		}
 	]
 }
